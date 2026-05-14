@@ -1,0 +1,72 @@
+name: Release Skill
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  package-skill:
+    name: Package idea-to-execution skill
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validate skill structure
+        run: |
+          set -euo pipefail
+
+          test -f SKILL.md
+          test -d agents
+          test -f agents/openai.yaml
+          test -d references
+          test -d assets
+          test -d scripts
+
+          echo "Skill structure looks valid."
+
+      - name: Prepare package directory
+        run: |
+          set -euo pipefail
+
+          rm -rf dist package-root
+          mkdir -p dist package-root/idea-to-execution
+
+          rsync -a \
+            --exclude ".git" \
+            --exclude ".github" \
+            --exclude "dist" \
+            --exclude "package-root" \
+            --exclude ".DS_Store" \
+            ./ package-root/idea-to-execution/
+
+      - name: Create skill.zip
+        run: |
+          set -euo pipefail
+
+          cd package-root
+          zip -r ../dist/skill.zip idea-to-execution
+
+          cd ..
+          ls -lh dist/skill.zip
+
+      - name: Generate checksum
+        run: |
+          set -euo pipefail
+
+          cd dist
+          sha256sum skill.zip > skill.zip.sha256
+          cat skill.zip.sha256
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/skill.zip
+            dist/skill.zip.sha256
+          generate_release_notes: true

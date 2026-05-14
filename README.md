@@ -1,5 +1,9 @@
 # idea-to-execution 使用说明
 
+# [安装说明](README_INSTALL_QUICK.md)
+
+
+
 ## 1. 这个 Skill 是什么
 
 `idea-to-execution` 是一个面向复杂任务执行的通用 Agent 工作流 Skill。
