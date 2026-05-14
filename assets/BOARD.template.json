@@ -1,0 +1,49 @@
+{
+  "agents": {},
+  "assumptions": [],
+  "autonomy_level": "autonomous_best_effort",
+  "created_at": "",
+  "dispatch_policy": {
+    "ask_user_by_default": false,
+    "auto_continue": true,
+    "execution_mode": "sequential",
+    "requirements_gate_required": true,
+    "review_required_for_done": true,
+    "self_approval_allowed": false,
+    "stop_conditions": [
+      "all_feasible_tasks_terminal",
+      "hard_external_blocker_after_auto_resolution",
+      "unsafe_operation",
+      "missing_required_permission_or_credentials"
+    ]
+  },
+  "goal": "",
+  "idea": "",
+  "spec_artifacts": {
+    "product_spec": "product_spec.md",
+    "ux_spec": "ux_spec.md",
+    "architecture_spec": "architecture_spec.md",
+    "requirements_gate_status": "required",
+    "requirements_audit": "requirements_audit.md"
+  },
+  "logging_policy": {
+    "mirror_to_trace_jsonl": true,
+    "require_step_logs": true,
+    "secret_logging": "forbidden",
+    "trace_files": [
+      "architecture_spec.md",
+      "ux_spec.md",
+      "product_spec.md",
+      "requirements_audit.md",
+      "events.jsonl",
+      "decisions.jsonl",
+      "trace.jsonl",
+      "runs/"
+    ]
+  },
+  "name": "default",
+  "success_criteria": [],
+  "tasks": [],
+  "updated_at": "",
+  "version": 5
+}

@@ -1,0 +1,3 @@
+interface:
+  display_name: "Idea to Execution"
+  short_description: "Autonomous idea-to-result execution with requirement audit, agent roles, review gates, and full trace logs."

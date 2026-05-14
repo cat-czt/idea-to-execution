@@ -1,0 +1,33 @@
+{
+  "run_id": "R-001-001",
+  "task_id": "T-001",
+  "agent": "implementer",
+  "started_at": "iso-8601",
+  "ended_at": "iso-8601-or-null",
+  "outcome": "active|submitted_for_review|approved|rejected|blocked|failed|canceled",
+  "summary": "brief run summary",
+  "step_log": [
+    {
+      "timestamp": "iso-8601",
+      "actor": "implementer",
+      "phase": "inspect|plan|edit|command|verify|review|decision|block|handoff|report",
+      "action": "what was done",
+      "target": "file, command, task, or subsystem",
+      "rationale": "brief reason",
+      "observation": "what happened",
+      "files_changed": [],
+      "commands": [],
+      "result": "success|failure|partial|blocked|info",
+      "next_step": "what should happen next"
+    }
+  ],
+  "changed_files": [],
+  "commands": [],
+  "verification": [],
+  "decisions": [],
+  "required_fixes": [],
+  "blocked_reason": null,
+  "unblock_condition": null,
+  "residual_risk": [],
+  "next_agent": null
+}

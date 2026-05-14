@@ -1,0 +1,14 @@
+{
+  "timestamp": "",
+  "decision_id": "D-000",
+  "actor": "decision_maker",
+  "scope": "board",
+  "question": "",
+  "selected": "",
+  "rejected_options": [],
+  "rationale": "",
+  "assumptions": [],
+  "risk": [],
+  "reversibility": "high",
+  "affected_tasks": []
+}

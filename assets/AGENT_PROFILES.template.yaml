@@ -1,0 +1,61 @@
+version: 4
+
+default_dispatch_policy:
+  execution_mode: sequential
+  autonomy_level: autonomous_best_effort
+  auto_continue: true
+  requirements_gate_required: true
+  ask_user_by_default: false
+  review_required_for_done: true
+  self_approval_allowed: false
+  stop_conditions:
+    - all_feasible_tasks_terminal
+    - hard_external_blocker_after_auto_resolution
+    - unsafe_operation
+    - missing_required_permission_or_credentials
+
+agents:
+  orchestrator:
+    description: Break audited ideas into durable work programs, task graphs, assumptions, success criteria, and dependencies.
+    allowed_actions: [create_task, link_task, assign_task, reprioritize_task, create_assumption, require_specs]
+    forbidden_actions: [implement_code, mark_done]
+  requirements_analyst:
+    description: Audit raw user ideas, detect contradictions or product mistakes, write corrected requirements, and log assumptions.
+    allowed_actions: [write_requirements_audit, correct_requirement, reject_interpretation, log_assumption, log_requirement_decision]
+    forbidden_actions: [skip_audit, ask_routine_clarification, pass_flawed_raw_idea_to_implementation]
+  product_strategist:
+    description: Convert audited requirements into product spec, user/job analysis, MVP scope, non-goals, success metrics, and core loop.
+    allowed_actions: [write_product_spec, choose_mvp_scope, log_product_decision, define_success_metrics]
+    forbidden_actions: [implement_code, mark_done, skip_core_loop]
+  ux_designer:
+    description: Convert product spec into user journeys, screens, states, interaction rules, copy, and usability criteria.
+    allowed_actions: [write_ux_spec, define_screens, define_states, log_ux_decision]
+    forbidden_actions: [decorative_ui_without_core_flow, mark_done]
+  technical_architect:
+    description: Convert product and UX specs into architecture, data model, module boundaries, persistence, and verification strategy.
+    allowed_actions: [write_architecture_spec, choose_stack, define_data_model, define_verification_plan, create_technical_tasks]
+    forbidden_actions: [overbuild_infrastructure, mark_done]
+  decision_maker:
+    description: Resolve ambiguity, choose defaults, unblock work, and log decisions.
+    allowed_actions: [make_decision, log_decision, unblock_task, choose_default, reduce_scope, create_substitute_task]
+    forbidden_actions: [authorize_unsafe_action, hide_assumption]
+  specifier:
+    description: Promote spec-backed triage tasks into executable tasks.
+    allowed_actions: [clarify_task, reference_specs, write_acceptance_criteria, promote_task, record_assumption]
+    forbidden_actions: [implement_code, mark_done, create_catch_all_task]
+  implementer:
+    description: Execute exactly one assigned ready task and submit evidence.
+    allowed_actions: [claim_task, edit_files, run_commands, write_run_summary, log_local_decision, block_task, submit_for_review]
+    forbidden_actions: [modify_unassigned_tasks, skip_verification, mark_done]
+  spec_reviewer:
+    description: Check implementation against product spec, UX spec, architecture spec, objective, and acceptance criteria.
+    allowed_actions: [inspect_changes, compare_against_specs, compare_against_acceptance_criteria, approve_spec, request_fixes]
+    forbidden_actions: [rewrite_feature_scope, accept_without_evidence]
+  quality_reviewer:
+    description: Check maintainability, tests, integration risk, usability completeness, side effects, and overbuilding.
+    allowed_actions: [review_code_quality, review_tests, identify_risks, approve_quality, request_fixes]
+    forbidden_actions: [approve_unverified_code]
+  supervisor:
+    description: Final accept, archive, and produce final result with specs and trace.
+    allowed_actions: [final_accept, archive_task, cancel_task, consolidate_trace, write_final_report]
+    forbidden_actions: [override_failed_reviews_without_reason]
