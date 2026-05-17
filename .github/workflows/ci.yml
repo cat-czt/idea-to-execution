@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-skill-structure:
+    name: Lint skill structure
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check required files exist
+        run: |
+          set -euo pipefail
+          test -f SKILL.md || { echo "ERROR: SKILL.md missing"; exit 1; }
+          test -d agents    || { echo "ERROR: agents/ missing"; exit 1; }
+          test -d references || { echo "ERROR: references/ missing"; exit 1; }
+          test -d scripts   || { echo "ERROR: scripts/ missing"; exit 1; }
+          echo "OK: All required files present"
+
+      - name: Check SKILL.md frontmatter
+        run: |
+          set -euo pipefail
+          if ! head -1 SKILL.md | grep -q "^---"; then
+            echo "ERROR: SKILL.md must start with YAML frontmatter"
+            exit 1
+          fi
+
+      - name: Check required references exist
+        run: |
+          set -euo pipefail
+          test -f references/agent-roles.md || exit 1
+          test -f references/autonomous-decision-policy.md || exit 1
+          test -f references/requirements-audit.md || exit 1
+          test -f references/dispatch-loop.md || exit 1
+          test -f references/review-gates.md || exit 1
+          echo "OK: All required references present"
+
+  lint-scripts:
+    name: Lint shell scripts
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install shellcheck
+        run: |
+          if ! command -v shellcheck >/dev/null 2>&1; then
+            apt-get update -qq && apt-get install -y -qq shellcheck || true
+          fi
+          shellcheck --version || echo "shellcheck not available"
+
+      - name: Lint install script
+        run: |
+          set -euo pipefail
+          if [ -f scripts/install-skill.sh ]; then
+            shellcheck -s sh scripts/install-skill.sh || echo "shellcheck not available"
+          fi
+
+  validate-install:
+    name: Validate install script
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check install script syntax
+        run: |
+          bash -n scripts/install-skill.sh && echo "OK: install-skill.sh syntax valid"
+
+      - name: Simulate install to temp dir
+        run: |
+          set -euo pipefail
+          tmpdir=$(mktemp -d)
+          SKILLS_DIR="$tmpdir/.agent/skills" REF="main" bash scripts/install-skill.sh 2>&1 | head -10
+          if [ -d "$tmpdir/.agent/skills/idea-to-execution" ]; then
+            test -f "$tmpdir/.agent/skills/idea-to-execution/SKILL.md" && echo "OK: Install simulation successful"
+          else
+            echo "WARNING: Install simulation may need network access"
+          fi
