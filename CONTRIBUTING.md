@@ -1,52 +1,54 @@
 # Contributing to idea-to-execution
 
-感谢你关注这个项目的演进。下面是你需要知道的一切。
+English | [简体中文](CONTRIBUTING_ZH.md)
+
+Thank you for your interest in the evolution of this project. Here's everything you need to know.
 
 ---
 
-## 如何本地测试这个 Skill
+## How to Test This Skill Locally
 
-### 方式一：模拟运行（推荐）
+### Option 1: Simulated Run (Recommended)
 
-在没有 AI agent 环境的情况下，验证 skill 的安装脚本和目录结构：
+Verify the Skill's installation script and directory structure without an AI agent environment:
 
 ```bash
-# 克隆仓库
+# Clone the repository
 git clone https://github.com/cat-czt/idea-to-execution.git
 cd idea-to-execution
 
-# 验证目录结构完整
+# Verify directory structure is complete
 test -f SKILL.md && test -d agents && test -d references && test -d scripts
 
-# 验证安装脚本语法
+# Verify installation script syntax
 bash -n scripts/install-skill.sh
 
-# 模拟安装到临时目录
+# Simulate installation to a temporary directory
 tmpdir=$(mktemp -d)
 SKILLS_DIR="$tmpdir/.agent/skills" bash scripts/install-skill.sh
 ls "$tmpdir/.agent/skills/idea-to-execution/"
 
-# 验证安装结果
+# Verify installation result
 test -f "$tmpdir/.agent/skills/idea-to-execution/SKILL.md"
 test -f "$tmpdir/.agent/skills/idea-to-execution/references/autonomous-decision-policy.md"
 ```
 
-### 方式二：在 AI Agent 中运行
+### Option 2: Run Inside an AI Agent
 
 ```bash
-# 方式 A：通过环境变量
+# Option A: Via environment variable
 export SKILLS_DIR="$HOME/.agent/skills"
 curl -fsSL https://raw.githubusercontent.com/cat-czt/idea-to-execution/main/scripts/install-skill.sh | bash
 
-# 方式 B：在 Claude Code / Codex 中
-# 在项目根目录创建 CLAUDE.md / AGENTS.md，引用 skill 路径
+# Option B: In Claude Code / Codex
+# Create CLAUDE.md / AGENTS.md in the project root, referencing the skill path
 ```
 
 ---
 
-## Commit 规范
+## Commit Convention
 
-使用 [Conventional Commits](https://www.conventionalcommits.org/)：
+We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 ```
 <type>(<scope>): <subject>
@@ -56,93 +58,93 @@ curl -fsSL https://raw.githubusercontent.com/cat-czt/idea-to-execution/main/scri
 [optional footer]
 ```
 
-### Type 枚举
+### Type Reference
 
-| Type | 适用场景 |
-|------|---------|
-| `feat` | 新功能、新角色、新工作流 |
-| `fix` | Bug 修复 |
-| `docs` | 文档更新（README、CONTRIBUTING 等） |
-| `refactor` | 重构（不影响行为的内部变更） |
-| `test` | 添加或修改测试 |
-| `chore` | 构建脚本、CI、依赖更新 |
-| `ci` | CI workflow 修改 |
+| Type | When to use |
+|------|-------------|
+| `feat` | New feature, new agent role, new workflow |
+| `fix` | Bug fix |
+| `docs` | Documentation updates (README, CONTRIBUTING, etc.) |
+| `refactor` | Refactoring (internal changes that don't affect behavior) |
+| `test` | Adding or modifying tests |
+| `chore` | Build scripts, CI, dependency updates |
+| `ci` | CI workflow changes |
 
-### Scope 可选
+### Scope (Optional)
 
-建议的 scope：
-- `install` — 安装脚本相关
-- `references` — 参考文档相关
-- `agents` — agent 配置相关
-- `workflow` — SKILL.md 工作流定义
+Suggested scopes:
+- `install` — installation script related
+- `references` — reference documentation related
+- `agents` — agent configuration related
+- `workflow` — SKILL.md workflow definition
 
-### 示例
+### Examples
 
 ```
-feat(references): 添加 autonomy-completion-contract.md
-fix(install): 修复 --dir 参数在某些平台上路径拼接错误
-docs: 更新 README 中的平台支持列表
-ci: 添加 CI workflow 验证 SKILL.md 结构
+feat(references): add autonomy-completion-contract.md
+fix(install): fix path concatenation bug with --dir flag on certain platforms
+docs: update platform support list in README
+ci: add CI workflow to validate SKILL.md structure
 ```
 
 ---
 
-## PR 流程
+## Pull Request Process
 
-### 分支策略
+### Branch Strategy
 
 ```
-main  ←  所有 PR 的目标分支（受保护）
+main  ←  target branch for all PRs (protected)
 
-feature/xxx  ←  功能分支
-fix/xxx      ←  Bug 修复分支
-docs/xxx     ←  文档改进分支
+feature/xxx  ←  feature branches
+fix/xxx      ←  bug fix branches
+docs/xxx     ←  documentation improvement branches
 ```
 
-### PR 规范
+### PR Requirements
 
-1. **每个 PR 只做一件事**（一个功能、一个修复、一组相关文档）
-2. **PR 描述必须包含**：
-   - 改变了什么
-   - 为什么需要这个改变
-   - 如何验证（测试步骤或截图）
-3. **CI 必须通过**才能合并：
-   - `lint-skill-structure` — SKILL.md 结构、frontmatter、references 完整性
-   - `lint-scripts` — ShellCheck 检查
-   - `validate-install` — 安装脚本语法和模拟安装
+1. **Each PR does one thing** (one feature, one fix, or one related set of documentation changes).
+2. **PR description must include**:
+   - What changed
+   - Why the change is needed
+   - How to verify it (test steps or screenshots)
+3. **CI must pass** before merging:
+   - `lint-skill-structure` — SKILL.md structure, frontmatter, and references completeness
+   - `lint-scripts` — ShellCheck validation
+   - `validate-install` — installation script syntax and simulated install
 
-### Review 要求
+### Review Requirements
 
-- 至少 1 个 approve 才能合并
-- Reviewer 检查：SKILL.md 逻辑一致性、references 与主文档的引用关系、CI 是否足够
+- At least 1 approval required before merging.
+- Reviewers check: SKILL.md logical consistency, reference-to-main-document relationships, and whether CI coverage is sufficient.
 
 ---
 
-## Skill 结构变更规范
+## Skill Structure Change Rules
 
-如果你的 PR 修改了以下内容，必须同步更新对应文件：
+If your PR modifies any of the following, you must update the corresponding files in sync:
 
-| 变更内容 | 必须同步检查 |
-|---------|------------|
-| 新增/删除/重命名 agent 角色 | `references/agent-roles.md`、`SKILL.md` 中的角色列表 |
-| 修改状态机状态 | `SKILL.md` 状态机部分、`references/dispatch-loop.md` |
-| 新增/删除 mandatory references | `.github/workflows/ci.yml` 中的 required_refs |
-| 修改安装路径 | `README_INSTALL_QUICK.md`、`SKILL.md` 中的路径说明 |
-| 新增文档模板 | 需在 `SKILL.md` 中说明用途和触发条件 |
+| What changed | Must also check |
+|---|---|
+| Added / removed / renamed an agent role | `references/agent-roles.md`, agent role list in `SKILL.md` |
+| Modified state machine states | State machine section in `SKILL.md`, `references/dispatch-loop.md` |
+| Added / removed mandatory references | `required_refs` in `.github/workflows/ci.yml` |
+| Changed installation path | `README_INSTALL_QUICK.md`, path descriptions in `SKILL.md` |
+| Added a new document template | Must describe purpose and trigger conditions in `SKILL.md` |
 
 ---
 
-## 发现 Bug 或提出功能建议
+## Reporting Bugs or Suggesting Features
 
-请使用 GitHub Issues，建议使用 issue templates（稍后添加）。
+Please use GitHub Issues. Issue templates will be added soon.
 
-描述时包含：
-- **环境**：哪个 agent 平台（Hermes / Claude Code / Codex）
-- **复现步骤**：尽量简单明了
-- **期望行为 vs 实际行为**
+When describing an issue, include:
+- **Environment**: which agent platform (Hermes / Claude Code / Codex)
+- **Steps to reproduce**: as concise as possible
+- **Expected behavior vs. actual behavior**
 
 ---
 
 ## Questions?
 
-欢迎在 GitHub Discussions 中提问。
+Feel free to ask in GitHub Discussions.
